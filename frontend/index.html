@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fieldscan - crop or weed?</title>
+  <meta name="description" content="Upload a photo of a plant and find out whether it is a crop or a weed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="/" aria-label="Fieldscan home">
+        <svg class="brand__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M16 25V13m0 0c0-4 3-6.5 7-6.5 0 4-3 6.500-7 6.500Zm0 4c0-3-2.500-5-6-5 0 3 2.500 5 6 5Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand__name">Fieldscan</span>
+      </a>
+      <div class="status" id="status" role="status" aria-live="polite">
+        <span class="status__dot" aria-hidden="true"></span>
+        <span class="status__text" id="statusText">Connecting to model</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="intro">
+      <h1>Check a plant photo</h1>
+      <p>Upload a close photo of one plant. The model tells you if it looks like a crop or a weed, and how sure it is.</p>
+    </section>
+
+    <div class="alert" id="alert" role="alert" hidden>
+      <span id="alertText"></span>
+      <button class="alert__close" id="alertClose" type="button" aria-label="Dismiss message">Dismiss</button>
+    </div>
+
+    <div class="workspace">
+      <!-- Left: the viewfinder -->
+      <section class="panel viewer" aria-label="Photo">
+        <div class="finder" id="finder" tabindex="0" role="button"
+             aria-label="Choose a photo. You can also drag a photo here or paste one.">
+          <span class="finder__corner finder__corner--tl"></span>
+          <span class="finder__corner finder__corner--tr"></span>
+          <span class="finder__corner finder__corner--bl"></span>
+          <span class="finder__corner finder__corner--br"></span>
+
+          <div class="finder__empty" id="finderEmpty">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 8.500A2.500 2.500 0 0 1 6.500 6h1.200a1 1 0 0 0 .8-.4l.9-1.200a1 1 0 0 1 .8-.4h3.600a1 1 0 0 1 .8.4l.9 1.200a1 1 0 0 0 .8.4h1.200A2.500 2.500 0 0 1 20 8.500v8A2.500 2.500 0 0 1 17.500 19h-11A2.500 2.500 0 0 1 4 16.500Z"/>
+              <circle cx="12" cy="12.500" r="3.300"/>
+            </svg>
+            <p class="finder__title">Drop a photo here</p>
+            <p class="finder__hint">or click to choose one. You can also paste from your clipboard.</p>
+            <p class="finder__fine">JPG or PNG, up to <span id="maxMb">10</span> MB</p>
+          </div>
+
+          <img class="finder__img" id="preview" alt="Selected plant photo" hidden>
+          <div class="finder__scan" id="scan" hidden><span></span></div>
+        </div>
+
+        <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple hidden>
+
+        <div class="viewer__actions">
+          <button class="btn btn--primary" id="chooseBtn" type="button">Choose photo</button>
+          <button class="btn" id="resetBtn" type="button" hidden>Scan another photo</button>
+        </div>
+      </section>
+
+      <!-- Right: the verdict -->
+      <section class="panel verdict" aria-label="Result" aria-live="polite">
+        <div class="verdict__idle" id="verdictIdle">
+          <h2>No result yet</h2>
+          <p>Add a photo and the result shows up here. For the best answer, fill the frame with one plant and use daylight.</p>
+        </div>
+
+        <div class="verdict__busy" id="verdictBusy" hidden>
+          <h2>Analyzing photo</h2>
+          <p id="busyText">This takes a moment.</p>
+        </div>
+
+        <div class="verdict__done" id="verdictDone" hidden>
+          <p class="verdict__file" id="resFile"></p>
+          <h2 class="verdict__label" id="resLabel"></h2>
+          <p class="verdict__conf"><strong id="resConf"></strong> confident</p>
+
+          <div class="strip" id="strip" role="img" aria-label="Share of each class"></div>
+          <ul class="legend" id="legend"></ul>
+
+          <p class="note" id="resNote"></p>
+          <p class="meta" id="resMeta"></p>
+        </div>
+      </section>
+    </div>
+
+    <section class="history" id="historySection" hidden aria-label="Recent scans">
+      <div class="history__head">
+        <h2>Recent scans</h2>
+        <button class="linkbtn" id="clearHistory" type="button">Clear list</button>
+      </div>
+      <ul class="history__list" id="historyList"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap" id="modelInfo">Model information loads when the server is ready.</div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

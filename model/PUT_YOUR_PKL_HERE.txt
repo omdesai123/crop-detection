@@ -1,0 +1,1 @@
+Copy crop_detection_cnn.pkl into this folder.
