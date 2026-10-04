@@ -2,6 +2,8 @@
 
 A web app for your trained CNN. FastAPI backend + plain HTML/CSS/JS frontend.
 
+**Live demo:  https://crop-detection-2-jmao.onrender.com
+
 ## Folder layout
 ```
 crop-detector-app/
